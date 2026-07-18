@@ -24,6 +24,17 @@ env/
 # Jupyter
 .ipynb_checkpoints/
 
+# LaTeX build artifacts (keep the .tex and the built .pdf, drop the rest)
+*.aux
+*.log
+*.out
+*.toc
+*.synctex.gz
+*.fls
+*.fdb_latexmk
+*.bbl
+*.blg
+
 # OS
 .DS_Store
 Thumbs.db
