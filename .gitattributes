@@ -14,5 +14,6 @@
 *.json  text eol=lf
 *.tex   text eol=lf
 
-# Collapse notebook diffs in PR views -- they are large and mostly output noise
-*.ipynb linguist-documentation
+# Language stats: notebooks are the project; the LaTeX figure source is not
+*.ipynb linguist-detectable=true
+*.tex   linguist-documentation
