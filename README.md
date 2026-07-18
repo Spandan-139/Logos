@@ -24,8 +24,42 @@ GPT-2 Small, same prompt and sampling settings:
 > more carefully. Language models are inherently subjective and subjective, and it is possible
 > that people will choose to use different languages and models than they did before.
 
-Both are locally coherent and both loop. GPT-2 holds a thread across sentences noticeably better —
-consistent with the ~40× training-token gap, not with any architectural difference.
+Both are locally coherent and both loop. GPT-2 holds a thread across sentences noticeably better.
+
+## Why the output looks like this
+
+Logos trained for **57 minutes**.
+
+3,408 seconds, 15,000 steps, ~245M tokens seen. For a 124M-parameter model, the
+compute-optimal budget from Hoffmann et al. (2022) is roughly 20 tokens per parameter —
+about 2.5B tokens. Logos saw **2 tokens per parameter, roughly a tenth of optimal**.
+GPT-2 Small saw ~10B tokens, about 40× more.
+
+The sample above is what that budget predicts. It is not evidence of a broken implementation:
+
+| Signal | Observed |
+|---|---|
+| Train / val loss | 3.79 / 3.98 — a 0.19 gap, so the model is **underfitting**, not overfitting |
+| Val loss at final step | Still descending; no plateau reached |
+| Failure mode | Repetition and semantic drift — the undertrained signature |
+
+A genuinely broken causal-attention or tokenization path produces word salad or degenerate
+single-token loops. What the samples do show — correct syntax, subject-verb agreement, plausible
+clause structure, topic anchoring across sentences — is the part that had to work, and it does.
+
+Two changes would close most of the gap, neither architectural:
+
+**Train longer.** At 4.4 steps/sec, 150k steps is about 9.5 hours — one overnight run on the
+same GPU, landing near compute-optimal. The Exp15→18 curve shows the return is still there:
+every training extension bought a large perplexity drop with no architecture change, and the
+curve had not flattened.
+
+**Drop the dropout.** Training used `dropout=0.2`. Dropout regularizes against overfitting, but
+this model is underfitting by a wide margin, so the dropout is spending capacity the run cannot
+spare. Setting it to 0.0 at this budget is close to free improvement.
+
+This is the honest scope of the project: a controlled study of what 124M parameters buy under a
+fixed single-GPU budget, not a competitive language model.
 
 ## Efficiency vs. quality
 
@@ -47,8 +81,8 @@ Logos places **last on quality and first on both latency and memory**. On a comp
 weighting quality against latency, memory, and model size, it ranks 2nd of 5 — behind
 Pythia-70M, ahead of GPT-2 Small.
 
-The quality gap is a compute gap. Logos saw ~245M tokens (15k steps × 16.4k tokens/step);
-GPT-2 saw roughly 40× more. Validation loss was still descending at the final step:
+The quality gap is the training-budget gap described above, not an architectural one.
+Validation loss was still descending at the final step:
 
 | Step | 1k | 3k | 5k | 8k | 11k | 15k |
 |---|---|---|---|---|---|---|
