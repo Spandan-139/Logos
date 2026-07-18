@@ -1,0 +1,49 @@
+{
+  "run_name": "logos_exp19_quantization_compression_exp18",
+  "source_experiment": "logos_exp18_large_scaling_weight_tying_swiglu_15k_train",
+  "source_checkpoint": "logos_runs\\logos_exp18_large_scaling_weight_tying_swiglu_15k_train\\logos_large_scaling_weight_tying_swiglu_15k_train_best.pt",
+  "task": "quantization_and_compression",
+  "notes": {
+    "fp16": "FP16 checkpoint stores floating point tensors in half precision.",
+    "dynamic_int8_cpu": "Dynamic INT8 quantization applies mainly to nn.Linear modules and is intended for CPU inference.",
+    "comparison_warning": "Validation estimates use sampled batches, so small differences may be noise."
+  },
+  "results": [
+    {
+      "variant": "FP32_reference",
+      "device": "cuda",
+      "param_count": 124031232,
+      "checkpoint_size_mb": 473.19574546813965,
+      "train_loss_est": 3.7980512221654257,
+      "val_loss_est": 3.993095842997233,
+      "val_ppl_est": 54.22249411916938,
+      "generation_tokens_per_sec": 105.55380651935,
+      "generation_ms_per_token": 9.473841190338135,
+      "peak_vram_mb": 6518.82421875
+    },
+    {
+      "variant": "FP16_checkpoint",
+      "device": "cuda",
+      "param_count": 124031232,
+      "checkpoint_size_mb": 310.2380886077881,
+      "train_loss_est": 3.7924479166666667,
+      "val_loss_est": 3.9296875,
+      "val_ppl_est": 50.89107172411317,
+      "generation_tokens_per_sec": 109.38176659351606,
+      "generation_ms_per_token": 9.14229154586792,
+      "peak_vram_mb": 5958.36083984375
+    },
+    {
+      "variant": "Dynamic_INT8_CPU",
+      "device": "cpu",
+      "param_count": 39028992,
+      "checkpoint_size_mb": 267.05133724212646,
+      "train_loss_est": 3.769723415374756,
+      "val_loss_est": 3.965983533859253,
+      "val_ppl_est": 52.772147067205225,
+      "generation_tokens_per_sec": 49.16180739649898,
+      "generation_ms_per_token": 20.340993404388428,
+      "peak_vram_mb": null
+    }
+  ]
+}

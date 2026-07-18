@@ -1,0 +1,18 @@
+# Prevent git from applying CRLF conversion to binary files.
+# Without this, Windows checkouts can corrupt PDFs and images.
+*.pdf   binary
+*.png   binary
+*.jpg   binary
+*.zip   binary
+*.pt    binary
+
+# Notebooks and text files: normalize to LF in the repo
+*.ipynb text eol=lf
+*.py    text eol=lf
+*.md    text eol=lf
+*.csv   text eol=lf
+*.json  text eol=lf
+*.tex   text eol=lf
+
+# Collapse notebook diffs in PR views -- they are large and mostly output noise
+*.ipynb linguist-documentation
